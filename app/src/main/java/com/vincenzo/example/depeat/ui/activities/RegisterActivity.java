@@ -1,4 +1,4 @@
-package com.vincenzo.example.depeat;
+package com.vincenzo.example.depeat.ui.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +16,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.vincenzo.example.depeat.R;
 
 
 public class RegisterActivity extends AppCompatActivity {

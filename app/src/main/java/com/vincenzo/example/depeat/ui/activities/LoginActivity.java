@@ -1,4 +1,4 @@
-package com.vincenzo.example.depeat;
+package com.vincenzo.example.depeat.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.Toast;
+
+import com.vincenzo.example.depeat.R;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
