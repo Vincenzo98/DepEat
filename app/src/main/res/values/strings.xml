@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">DepEat</string>
+    <string name="email_hint">insert email</string>
+    <string name="password_hint">insert your password</string>
+    <string name="password_hint2">confirm password</string>
+    <string name="login">login</string>
+    <string name="register">register</string>
+    <string name="credential_ok">credenziali ok</string>
+    <string name="welcome">Welcome</string>
+    <string name="email_tv">ciao</string>
+    <string name="send_mail">Send email</string>
+    <string name="num_telefono">Insert phone</string>
 </resources>
