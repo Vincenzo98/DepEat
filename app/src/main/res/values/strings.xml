@@ -10,4 +10,5 @@
     <string name="email_tv">ciao</string>
     <string name="send_mail">Send email</string>
     <string name="num_telefono">Insert phone</string>
+    <string name="checkout">CheckOut</string>
 </resources>

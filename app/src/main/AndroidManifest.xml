@@ -12,21 +12,28 @@
         <activity android:name=".Utils"></activity>
         <activity android:name=".ui.activities.CheckOutActivity" />
         <activity android:name=".ui.activities.ShopActivity" />
+
+
         <activity android:name=".ui.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
         <activity android:name=".ui.activities.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+
         </activity>
+
         <activity android:name=".ui.activities.RegisterActivity" />
+
+
     </application>
 
 </manifest>
