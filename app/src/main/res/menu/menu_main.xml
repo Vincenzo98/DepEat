@@ -4,8 +4,9 @@
 
     <item
         android:id="@+id/login_menu"
+        android:icon="@drawable/user"
         android:title="@string/login"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/checkout_menu"

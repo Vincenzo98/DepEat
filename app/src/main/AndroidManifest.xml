@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Utils"></activity>
+
         <activity android:name=".ui.activities.CheckOutActivity" />
         <activity android:name=".ui.activities.ShopActivity" />
 
