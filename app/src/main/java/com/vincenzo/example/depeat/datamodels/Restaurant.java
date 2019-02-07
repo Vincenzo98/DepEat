@@ -6,6 +6,8 @@ public class Restaurant {
     Float prezzo;
     String UrlImm;
 
+
+
     public Restaurant(String nome, String indirizzo, Float prezzo, String UrlImm) {
         this.nome = nome;
         this.indirizzo = indirizzo;
