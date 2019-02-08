@@ -1,5 +1,6 @@
 package com.vincenzo.example.depeat.datamodels;
 
+
 public class Restaurant {
     String nome;
     String indirizzo;

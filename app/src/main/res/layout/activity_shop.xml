@@ -33,6 +33,7 @@
 
 
             <TextView
+                android:id="@+id/indirizzo2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Indirizzo"
@@ -89,10 +90,12 @@
         android:layout_alignParentBottom="true">
 
         <TextView
+            android:id="@+id/totale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Totale:"
             android:textSize="20dp"/>
+
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -100,8 +103,6 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_gravity="bottom"
-            android:max="100"
-            android:progress="44"
             android:progressTint="@color/colore1"/>
 
         <Button

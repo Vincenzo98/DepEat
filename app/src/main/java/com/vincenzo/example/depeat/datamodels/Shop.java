@@ -4,7 +4,25 @@ public class Shop {
     String cibo;
     Float prezzo;
     int quantity = 0;
+    String totale;
 
+
+    public String getTotale() {
+        return totale;
+    }
+
+    public void setTotale(String totale) {
+        this.totale = totale;
+    }
+
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
     public Shop(String cibo, Float prezzo) {
         this.cibo = cibo;
@@ -20,8 +38,8 @@ public class Shop {
         this.cibo = cibo;
     }
 
-    public String getPrezzo() {
-        return prezzo + " €";
+    public Float getPrezzo() {
+        return prezzo;
     }
 
     public void setPrezzo(Float prezzo) {

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.vincenzo.example.depeat.R;
 import com.vincenzo.example.depeat.datamodels.Shop;
+import com.vincenzo.example.depeat.ui.activities.ShopActivity;
 
 import java.util.ArrayList;
 
@@ -24,13 +25,16 @@ public class Shop_adapters extends RecyclerView.Adapter {
     private LayoutInflater inflater;
     private ArrayList<Shop> data;
 
-    public final Context context;
+    //public final Context context;
+
 
     public Shop_adapters(Context context, ArrayList<Shop> data){
         inflater = LayoutInflater.from(context);
         this.data = data;
-        this.context = context;
+        //this.context = context;
     }
+
+
 
     public interface OnQuantityChangedListener{
         void onChange(float prezzo);
@@ -48,6 +52,7 @@ public class Shop_adapters extends RecyclerView.Adapter {
 
 
 
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -58,16 +63,23 @@ public class Shop_adapters extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         ShopViewHolder sh = (ShopViewHolder) viewHolder;
+
         sh.cibo.setText(data.get(i).getCibo());
-        sh.prezzo.setText(data.get(i).getPrezzo());
+        sh.prezzo.setText("" +data.get(i).getPrezzo());
+        sh.quantita.setText(String.valueOf(data.get(i).getQuantity()));
     }
+
+
 
     @Override
     public int getItemCount() {
         return data.size();
     }
 
-    public class ShopViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+
+
+    public class ShopViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView cibo;
         public TextView prezzo;
@@ -75,9 +87,7 @@ public class Shop_adapters extends RecyclerView.Adapter {
 
         public Button button3;
         public Button button4;
-        //public Button checkout;
 
-        private ProgressBar progressBar;
 
         public ShopViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -88,15 +98,15 @@ public class Shop_adapters extends RecyclerView.Adapter {
 
             button3 = itemView.findViewById(R.id.addBtn);
             button4 = itemView.findViewById(R.id.removeBtn);
-            //checkout = itemView.findViewById(R.id.checkout);
 
             button3.setOnClickListener(this);
             button4.setOnClickListener(this);
-         //   checkout.setOnClickListener(this);
 
-            progressBar = itemView.findViewById(R.id.progressBar);
 
         }
+
+
+
 
         @Override
         public void onClick(View v) {
@@ -106,17 +116,19 @@ public class Shop_adapters extends RecyclerView.Adapter {
             if(v.getId() == R.id.addBtn){
 
                 shop.increaseQuantity();
-            //   onQuantityChangedListener.onChange(shop.getPrezzo());
+                notifyItemChanged(getAdapterPosition());
+                onQuantityChangedListener.onChange(shop.getPrezzo());
 
 
             }else if(v.getId() == R.id.removeBtn){
+                if(shop.getQuantity() == 0 )return;
 
                 shop.decreaseQuantity();
-             //  onQuantityChangedListener.onChange(shop.getPrezzo()*-1);
+                notifyItemChanged(getAdapterPosition());
+                onQuantityChangedListener.onChange(shop.getPrezzo()*-1);
 
             }
 
-            notifyItemChanged(getAdapterPosition());
 
         }
     }
