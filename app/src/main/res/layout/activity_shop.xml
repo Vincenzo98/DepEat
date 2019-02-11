@@ -93,6 +93,8 @@
             android:id="@+id/totale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginLeft="10dp"
             android:text="Totale:"
             android:textSize="20dp"/>
 
@@ -103,13 +105,20 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_gravity="bottom"
-            android:progressTint="@color/colore1"/>
+            android:progressTint="@color/colore1"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"/>
 
         <Button
             android:id="@+id/checkout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/checkout"/>
+            android:background="@color/colore1"
+            android:hint="@string/checkout"
+            android:textSize="20dp"
+            android:textColorHint="@color/cardview_light_background"
+            android:enabled="false"
+            />
 
     </LinearLayout>
 
