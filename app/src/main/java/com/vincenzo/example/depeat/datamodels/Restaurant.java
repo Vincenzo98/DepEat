@@ -1,6 +1,9 @@
 package com.vincenzo.example.depeat.datamodels;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Restaurant {
     String nome;
     String indirizzo;
@@ -12,6 +15,13 @@ public class Restaurant {
         this.indirizzo = indirizzo;
         this.prezzo = prezzo;
         this.UrlImm = UrlImm;
+    }
+
+    public Restaurant(JSONObject jsonRestaurant) throws JSONException {
+        nome = jsonRestaurant.getString("name");
+        indirizzo = jsonRestaurant.getString("address");
+        prezzo = Float.valueOf(jsonRestaurant.getString("min_order"));
+        UrlImm = jsonRestaurant.getString("image_Url");
     }
 
 

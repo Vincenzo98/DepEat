@@ -15,16 +15,27 @@ import android.view.View;
 import android.widget.Button;
 import android.content.SharedPreferences;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.vincenzo.example.depeat.R;
 import com.vincenzo.example.depeat.datamodels.Restaurant;
 import com.vincenzo.example.depeat.ui.adapters.Restaurant_adapter;
 import com.vincenzo.example.depeat.ui.adapters.Restaurant_adapter2;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
 
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = MainActivity.class.getName();
 
     boolean view = false;
 
@@ -53,6 +64,43 @@ public class MainActivity extends AppCompatActivity {
         adapter2 = new Restaurant_adapter2(this, getData());
         view = share.getBoolean("gridmode", false);
 
+
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://5ba19290ee710f0014dd764c.mockapi.io/api/v1/restaurant";
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.GET,   //HTTP request method
+                url, //Server link
+                new Response.Listener<String>() {    //listener for succesfull response
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i(TAG, response);
+
+                        //Start parsing
+                        try {
+                            JSONArray restaurantJsonArray = new JSONArray(response);
+                            for(int i = 0; i<restaurantJsonArray.length(); i++){
+                                Restaurant restaurant = new Restaurant(restaurantJsonArray.getJSONObject(i));
+                                arrayList.add(restaurant);
+                            }
+                            adapter.setData(arrayList);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {    // listener for error response
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i(TAG, error.getMessage() + error.networkResponse.statusCode);
+                    }
+                }
+        );
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
      }
 
     private ArrayList<Restaurant> getData(){

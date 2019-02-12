@@ -22,13 +22,17 @@ public class Restaurant_adapter extends RecyclerView.Adapter{
 
     private LayoutInflater inflater;
     private ArrayList<Restaurant> data;
-    public final Context context;
+    public Context context;
 
 
     public Restaurant_adapter(Context context, ArrayList<Restaurant> data){
         inflater = LayoutInflater.from(context);
         this.data = data;
         this.context = context;
+    }
+
+    public Restaurant_adapter(Context context){
+        new Restaurant_adapter(context, new ArrayList<Restaurant>());
     }
 
     @NonNull
@@ -51,6 +55,13 @@ public class Restaurant_adapter extends RecyclerView.Adapter{
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+
+    public void setData(ArrayList<Restaurant> data){
+       inflater = LayoutInflater.from(context);
+        this.data = new ArrayList<>();
+        notifyDataSetChanged();
     }
 
     public class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
