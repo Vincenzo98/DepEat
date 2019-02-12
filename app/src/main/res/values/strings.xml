@@ -12,4 +12,8 @@
     <string name="num_telefono">Insert phone</string>
     <string name="checkout">CheckOut</string>
     <string name="pay">Pay</string>
+    <string name="be_careful">Stai attento</string>
+    <string name="remove_title">Sei sicuro?</string>
+    <string name="confirm">Conferma</string>
+    <string name="cancel">Cancella</string>
 </resources>
