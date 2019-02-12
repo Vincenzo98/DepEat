@@ -53,13 +53,13 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="right">
+                    android:layout_gravity="right">
 
                     <Button
                         android:id="@+id/button1"
                         android:layout_width="70dp"
                         android:layout_height="35dp"
-                        android:layout_marginRight="2dp"
+                        android:layout_marginRight="26dp"
                         android:layout_marginBottom="1dp"
                         android:layout_gravity="bottom"
                         android:background="@drawable/btn_rounded"
