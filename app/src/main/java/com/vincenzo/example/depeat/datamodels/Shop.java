@@ -1,10 +1,23 @@
 package com.vincenzo.example.depeat.datamodels;
 
+import org.json.JSONObject;
+
 public class Shop {
     String cibo;
     Float prezzo;
     int quantity = 0;
     String totale;
+
+
+    public Shop(String cibo, Float prezzo) {
+        this.cibo = cibo;
+        this.prezzo = prezzo;
+    }
+
+    public Shop(JSONObject jsonShop) throws Exception{
+        cibo= jsonShop.getString("name");
+        prezzo = (float) (jsonShop.getDouble("price"));
+    }
 
 
     public String getTotale() {
@@ -24,10 +37,6 @@ public class Shop {
         this.quantity = quantity;
     }
 
-    public Shop(String cibo, Float prezzo) {
-        this.cibo = cibo;
-        this.prezzo = prezzo;
-    }
 
 
     public String getCibo() {

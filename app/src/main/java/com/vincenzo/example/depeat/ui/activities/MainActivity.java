@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.content.SharedPreferences;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -23,17 +25,19 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.vincenzo.example.depeat.R;
 import com.vincenzo.example.depeat.datamodels.Restaurant;
+import com.vincenzo.example.depeat.services.RestController;
 import com.vincenzo.example.depeat.ui.adapters.Restaurant_adapter;
 import com.vincenzo.example.depeat.ui.adapters.Restaurant_adapter2;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Response.Listener<String>, Response.ErrorListener{
 
     private static final String TAG = MainActivity.class.getName();
 
@@ -44,7 +48,9 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManagerGrid;
     Restaurant_adapter adapter;
     Restaurant_adapter2 adapter2;
-    ArrayList<Restaurant> arrayList;
+    ArrayList<Restaurant> arrayList = new ArrayList<>();
+
+    private RestController restController;
 
     SharedPreferences.Editor editor;
     SharedPreferences share;
@@ -57,51 +63,20 @@ public class MainActivity extends AppCompatActivity {
         editor = getSharedPreferences("DepEat", MODE_PRIVATE).edit();
         share = getSharedPreferences("DepEat", MODE_PRIVATE);
 
+        restController = new RestController(this);
+        restController.getRequest(Restaurant.ENDPOINT, this, this );
+
         restaurantRV = findViewById(R.id.places_rv);
         layoutManager = new LinearLayoutManager(this);
         layoutManagerGrid = new GridLayoutManager(this, 2);
-        adapter = new Restaurant_adapter(this, getData());
-        adapter2 = new Restaurant_adapter2(this, getData());
+        adapter = new Restaurant_adapter(this);
+        adapter2 = new Restaurant_adapter2(this);
         view = share.getBoolean("gridmode", false);
 
 
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://5ba19290ee710f0014dd764c.mockapi.io/api/v1/restaurant";
+    }
 
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(
-                Request.Method.GET,   //HTTP request method
-                url, //Server link
-                new Response.Listener<String>() {    //listener for succesfull response
-                    @Override
-                    public void onResponse(String response) {
-                        Log.i(TAG, response);
 
-                        //Start parsing
-                        try {
-                            JSONArray restaurantJsonArray = new JSONArray(response);
-                            for(int i = 0; i<restaurantJsonArray.length(); i++){
-                                Restaurant restaurant = new Restaurant(restaurantJsonArray.getJSONObject(i));
-                                arrayList.add(restaurant);
-                            }
-                            adapter.setData(arrayList);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {    // listener for error response
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.i(TAG, error.getMessage() + error.networkResponse.statusCode);
-                    }
-                }
-        );
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
-     }
 
     private ArrayList<Restaurant> getData(){
         arrayList = new ArrayList<>();
@@ -153,4 +128,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        Log.e(TAG, error.getMessage());
+        Toast.makeText(this, error.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onResponse(String response) {
+        try {
+            JSONArray jsonArray = new JSONArray(response);
+            for(int i = 0; i<jsonArray.length(); i++){
+                arrayList.add(new Restaurant(jsonArray.getJSONObject(i)));
+            }
+            Log.i("simone", "sono qui");
+            adapter.setData(arrayList);
+            adapter2.setData(arrayList);
+        }catch (JSONException e){
+            Log.e(TAG, e.getMessage());
+        }
+    }
 }

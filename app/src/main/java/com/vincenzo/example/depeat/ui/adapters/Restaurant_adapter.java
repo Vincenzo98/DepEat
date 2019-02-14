@@ -32,7 +32,9 @@ public class Restaurant_adapter extends RecyclerView.Adapter{
     }
 
     public Restaurant_adapter(Context context){
-        new Restaurant_adapter(context, new ArrayList<Restaurant>());
+        this.data = new ArrayList<>();
+        inflater = LayoutInflater.from(context);
+        this.context = context;
     }
 
     @NonNull
@@ -59,8 +61,7 @@ public class Restaurant_adapter extends RecyclerView.Adapter{
 
 
     public void setData(ArrayList<Restaurant> data){
-       inflater = LayoutInflater.from(context);
-        this.data = new ArrayList<>();
+        this.data = data;
         notifyDataSetChanged();
     }
 
@@ -88,8 +89,15 @@ public class Restaurant_adapter extends RecyclerView.Adapter{
 
         @Override
         public void onClick(View v) {
-            if(v.getId() == R.id.button1)
-                context.startActivity(new Intent(context, ShopActivity.class));
+            Restaurant rest = data.get(getAdapterPosition());
+            if (v.getId() == R.id.button1) {
+                Intent intent = new Intent(context, ShopActivity.class);
+                intent.putExtra("price", rest.getPrezzo());
+                intent.putExtra("name", rest.getNome());
+                intent.putExtra("id", rest.getId());
+                intent.putExtra("address", rest.getIndirizzo());
+                context.startActivity(intent);
+            }
         }
 
     }

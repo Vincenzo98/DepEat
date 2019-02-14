@@ -33,6 +33,12 @@ public class Restaurant_adapter2 extends RecyclerView.Adapter{
         this.context = context;
     }
 
+    public Restaurant_adapter2(Context context){
+        inflater = LayoutInflater.from(context);
+        this.data = new ArrayList<>();
+        this.context = context;
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {  //quando c'è una singola riga
@@ -53,6 +59,11 @@ public class Restaurant_adapter2 extends RecyclerView.Adapter{
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    public void setData(ArrayList<Restaurant> data){
+        this.data = data;
+        notifyDataSetChanged();
     }
 
     public class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

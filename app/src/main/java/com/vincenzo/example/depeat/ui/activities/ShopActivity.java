@@ -5,32 +5,42 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.vincenzo.example.depeat.R;
 import com.vincenzo.example.depeat.datamodels.Restaurant;
 import com.vincenzo.example.depeat.datamodels.Shop;
+import com.vincenzo.example.depeat.services.RestController;
 import com.vincenzo.example.depeat.ui.adapters.Restaurant_adapter;
 import com.vincenzo.example.depeat.ui.adapters.Shop_adapters;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 
 
-public class ShopActivity extends AppCompatActivity implements Shop_adapters.OnQuantityChangedListener{
+public class ShopActivity extends AppCompatActivity implements Shop_adapters.OnQuantityChangedListener,Response.Listener<String>, Response.ErrorListener{
 
     private RecyclerView shopRv;
 
     private Shop_adapters adapters;
 
     RecyclerView.LayoutManager layoutManager;
-    ArrayList<Shop> arrayList;
+    ArrayList<Shop> arrayList = new ArrayList<>();
 
+    float price;
 
     private float total=0;
 
@@ -41,8 +51,12 @@ public class ShopActivity extends AppCompatActivity implements Shop_adapters.OnQ
     private ProgressBar progressBar;
     private ImageView immagine3;
 
-
     private Restaurant restaurant;
+
+    private RestController restController;
+
+    private static final String TAG = MainActivity.class.getName();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,13 +86,27 @@ public class ShopActivity extends AppCompatActivity implements Shop_adapters.OnQ
         progressBar.setMax(val * 100);
 
 
+        Intent intent = getIntent();
+        String name = intent.getExtras().getString("name");
+        String address = intent.getExtras().getString("address");
+        price = intent.getExtras().getFloat("price");
+        String id = intent.getExtras().getString("id");
+
+        restController = new RestController(this);
+        restController.getRequest(Restaurant.ENDPOINT.concat("/").concat(id), this, this );
+
         layoutManager = new LinearLayoutManager(this);
-        adapters = new Shop_adapters(this, getData());
+        adapters = new Shop_adapters(this, arrayList);
         adapters.setOnQuantityChangedListener(this);
 
 
         shopRv.setLayoutManager(layoutManager);
         shopRv.setAdapter(adapters);
+
+
+        restController = new RestController(this);
+        restController.getRequest(Restaurant.ENDPOINT, this, this );
+
 
 
         checkout.setOnClickListener(new View.OnClickListener() {
@@ -129,5 +157,26 @@ public class ShopActivity extends AppCompatActivity implements Shop_adapters.OnQ
         }
     }
 
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        Log.e(TAG, error.getMessage());
+        Toast.makeText(this, error.getMessage(), Toast.LENGTH_LONG).show();
+    }
 
+    @Override
+    public void onResponse(String response) {
+        arrayList = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONObject(response).getJSONArray("products");
+            for(int i = 0; i<jsonArray.length(); i++){
+                arrayList.add(new Shop(jsonArray.getJSONObject(i)));
+            }
+            Log.i("simone", "sono qui");
+            adapters.setData(arrayList);
+        }catch (JSONException e){
+            Log.e(TAG, e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

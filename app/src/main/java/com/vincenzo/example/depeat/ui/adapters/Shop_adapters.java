@@ -31,7 +31,6 @@ public class Shop_adapters extends RecyclerView.Adapter {
     public Shop_adapters(Context context, ArrayList<Shop> data){
         inflater = LayoutInflater.from(context);
         this.data = data;
-        //this.context = context;
     }
 
 
@@ -77,7 +76,10 @@ public class Shop_adapters extends RecyclerView.Adapter {
     }
 
 
-
+    public void setData(ArrayList<Shop> data){
+        this.data = data;
+        notifyDataSetChanged();
+    }
 
     public class ShopViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
