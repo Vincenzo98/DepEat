@@ -1,11 +1,17 @@
 package com.vincenzo.example.depeat.ui.activities;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.vincenzo.example.depeat.R;
+import com.vincenzo.example.depeat.datamodels.Order;
 import com.vincenzo.example.depeat.datamodels.Restaurant;
 import com.vincenzo.example.depeat.datamodels.Shop;
 import com.vincenzo.example.depeat.services.RestController;
@@ -36,9 +43,9 @@ public class ShopActivity extends AppCompatActivity implements Shop_adapters.OnQ
     private RecyclerView shopRv;
 
     private Shop_adapters adapters;
-
+    ArrayList<Shop> shops = new ArrayList<>();
     RecyclerView.LayoutManager layoutManager;
-    ArrayList<Shop> arrayList = new ArrayList<>();
+  //  ArrayList<Shop>  = new ArrayList<>();
 
     float price;
 
@@ -55,8 +62,11 @@ public class ShopActivity extends AppCompatActivity implements Shop_adapters.OnQ
 
     private RestController restController;
 
-    private static final String TAG = MainActivity.class.getName();
+    private static final String TAG = ShopActivity.class.getSimpleName();
+    private static final int LOGIN_REQUEST_CODE = 2001;
 
+
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,35 +87,26 @@ public class ShopActivity extends AppCompatActivity implements Shop_adapters.OnQ
         restaurant = new Restaurant("Pizzeria", "Via roma 303", 30f, "https://static.seekingalpha.com/uploads/2018/7/24/saupload_3000px-McDonald_27s_SVG_logo.svg.png");
 
 
-        nome2.setText(restaurant.getNome());
-        indirizzo2.setText(restaurant.getIndirizzo());
-        Glide.with(this).load(restaurant.getUrlImm()).into(immagine3);
-
-
-        val = Math.round(restaurant.getPrezzo());
-        progressBar.setMax(val * 100);
 
 
         Intent intent = getIntent();
+
         String name = intent.getExtras().getString("name");
         String address = intent.getExtras().getString("address");
-        price = intent.getExtras().getFloat("price");
+        price = intent.getExtras().getFloat("minprice");
         String id = intent.getExtras().getString("id");
 
         restController = new RestController(this);
-        restController.getRequest(Restaurant.ENDPOINT.concat("/").concat(id), this, this );
+        restController.getRequest(Restaurant.ENDPOINT.concat(id), this, this );
 
         layoutManager = new LinearLayoutManager(this);
-        adapters = new Shop_adapters(this, arrayList);
+        adapters = new Shop_adapters(this, shops);
         adapters.setOnQuantityChangedListener(this);
 
 
         shopRv.setLayoutManager(layoutManager);
+        ((SimpleItemAnimator) shopRv.getItemAnimator()).setSupportsChangeAnimations(false);
         shopRv.setAdapter(adapters);
-
-
-        restController = new RestController(this);
-        restController.getRequest(Restaurant.ENDPOINT, this, this );
 
 
 
@@ -116,18 +117,32 @@ public class ShopActivity extends AppCompatActivity implements Shop_adapters.OnQ
             }
         });
 
+
     }
 
-    private ArrayList<Shop> getData() {
-        arrayList = new ArrayList<>();
-        arrayList.add(new Shop("Hamburger", 10f));
-        arrayList.add(new Shop("Patatine", 5f));
-        arrayList.add(new Shop("Coca Cola", 3f));
-        arrayList.add(new Shop("Acqua", 1.5f));
-        arrayList.add(new Shop("Ketchup", 1f));
-        arrayList.add(new Shop("Dolce", 2f));
-        return arrayList;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main,menu);
+        this.menu = menu;
+        return true;
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.login_menu) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivityForResult(intent, LOGIN_REQUEST_CODE);
+
+        }else if(item.getItemId() == R.id.checkout_menu){
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void updateTotal(float item) {
         total += item;
@@ -136,6 +151,52 @@ public class ShopActivity extends AppCompatActivity implements Shop_adapters.OnQ
 
     private void updateProgress(int progress){
         progressBar.setProgress(progress);
+    }
+
+
+
+    private void btnCheck(Button button){
+        if(total >= val){
+            button.setEnabled(true);
+        }else{
+            button.setEnabled(false);
+        }
+    }
+
+    private void bindData(){
+        nome2.setText(restaurant.getNome());
+        indirizzo2.setText(restaurant.getIndirizzo());
+        Glide.with(this).load(restaurant.getUrlImm()).into(immagine3);
+        val = Math.round(restaurant.getPrezzo());
+        progressBar.setMax(val * 100);
+
+        adapters.setData(restaurant.getProducts());
+
+    }
+
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.d(TAG,"requestCode " + requestCode);
+        Log.d(TAG,"resultCode " + resultCode);
+
+        if(requestCode == LOGIN_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            // TODO login is successful manage result
+
+            Log.d(TAG,data.getStringExtra("response"));
+            menu.findItem(R.id.login_menu).setTitle(R.string.profile)
+                    .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            startActivity(new Intent(ShopActivity.this,ProfileActivity.class));
+                            return true;
+                        }
+                    });
+
+
+        }
     }
 
     @Override
@@ -149,14 +210,6 @@ public class ShopActivity extends AppCompatActivity implements Shop_adapters.OnQ
 
 
 
-    private void btnCheck(Button button){
-        if(total >= val){
-            button.setEnabled(true);
-        }else{
-            button.setEnabled(false);
-        }
-    }
-
     @Override
     public void onErrorResponse(VolleyError error) {
         Log.e(TAG, error.getMessage());
@@ -165,14 +218,21 @@ public class ShopActivity extends AppCompatActivity implements Shop_adapters.OnQ
 
     @Override
     public void onResponse(String response) {
-        arrayList = new ArrayList<>();
+
         try {
-            JSONArray jsonArray = new JSONObject(response).getJSONArray("products");
+            JSONObject jsonObject = new JSONObject(response);
+            restaurant = new Restaurant(jsonObject);
+            JSONArray jsonArray = jsonObject.getJSONArray("products");
+            ArrayList<Shop> shops = new ArrayList<>();
+
             for(int i = 0; i<jsonArray.length(); i++){
-                arrayList.add(new Shop(jsonArray.getJSONObject(i)));
+                shops.add(new Shop(jsonArray.getJSONObject(i)));
             }
-            Log.i("simone", "sono qui");
-            adapters.setData(arrayList);
+
+            bindData();
+            adapters.setData(shops);
+
+
         }catch (JSONException e){
             Log.e(TAG, e.getMessage());
         } catch (Exception e) {

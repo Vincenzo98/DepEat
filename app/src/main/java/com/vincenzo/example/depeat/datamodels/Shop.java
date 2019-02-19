@@ -7,6 +7,7 @@ public class Shop {
     Float prezzo;
     int quantity = 0;
     String totale;
+    String id;
 
 
     public Shop(String cibo, Float prezzo) {
@@ -17,6 +18,7 @@ public class Shop {
     public Shop(JSONObject jsonShop) throws Exception{
         cibo= jsonShop.getString("name");
         prezzo = (float) (jsonShop.getDouble("price"));
+        id = jsonShop.getString("id");
     }
 
 

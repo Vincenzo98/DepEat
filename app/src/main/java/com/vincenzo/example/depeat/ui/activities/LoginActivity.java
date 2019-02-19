@@ -1,7 +1,9 @@
 package com.vincenzo.example.depeat.ui.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
@@ -15,10 +17,22 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.vincenzo.example.depeat.R;
+import com.vincenzo.example.depeat.datamodels.Shop;
+import com.vincenzo.example.depeat.datamodels.User;
+import com.vincenzo.example.depeat.services.RestController;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, Response.Listener<String>, Response.ErrorListener{
+
+    private static final String TAG = LoginActivity.class.getSimpleName();
 
 
         Button loginBtn;
@@ -34,9 +48,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         final static int LEN_PASS = 6;
 
+        private RestController restController;
+
+        public static final String EMAIL_KEY = "email";
+
         @Override
         protected void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
+            restController = new RestController(this);
 
             setContentView(R.layout.login_activity);  //richiamare il setContentView, quale layout mostrare
 
@@ -58,21 +78,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             registerBtn.setOnClickListener(this);
             aSwitch.setOnClickListener(this);
 
-            /*registerBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.i("Button", "Register premuto");
-                }
-            });*/
 
             loginBtn = findViewById(R.id.login_btn);
             Log.i("MainActivity","Activity created");
+
+
         }
+
 
 
         public void doRegister() {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-            setContentView(R.layout.register_activity);
+           // setContentView(R.layout.register_activity);
             startActivity(intent);
             finish();
         }
@@ -119,22 +136,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 showToast(R.string.password_hint);
                 return;
             }
-            /*  if(!isEmailValid(emailEt.getText().toString())){
-                showToast(R.string.email_hint);
-                return;
-        }
-        if (passwordEt.getText().toString().length() > LEN_PASS){
-            showToast(R.string.password_hint);
-        }
-*/
+
             showToast(R.string.credential_ok);
 
-           /*Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-            String email2=emailEt.getText().toString();
-            intent.putExtra("email",email2);
-            startActivity(intent);*/
-        }
+            Map<String, String> params = new HashMap<>();
+            params.put("identifier", email);
+            params.put("password", password);
 
+            restController.postRequest(User.LOGIN_ENDPOINT, params, this,this);
+            showToast(R.string.eseguito);
+
+        }
 
 
         private boolean isEmailValid(CharSequence email){
@@ -145,7 +157,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Toast.makeText(this, getString(resId), Toast.LENGTH_SHORT).show();
         }
 
-        @Override
+        private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        }
+
+
+    @Override
         protected void onResume(){
             super.onResume();
             Log.i("Lifecycle", "onResume chiamato");
@@ -174,5 +191,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             super.onDestroy();
             Log.i("Lifecycle", "onDestroy chiamato");
         }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        Log.e(TAG, error.getMessage());
+        showToast(error.getMessage());
     }
+
+
+    @Override
+    public void onResponse(String response) {
+            try{
+                JSONObject jsonObject = new JSONObject(response);
+                Log.i("jsonInformazione", jsonObject.toString());
+            }catch (JSONException ex){
+                Log.e("erroreeeee", ex.getMessage());
+            }
+
+
+        Intent i = new Intent();
+        i.putExtra("response",response);
+        setResult(Activity.RESULT_OK,i);
+        finish();
+
+    }
+}
 

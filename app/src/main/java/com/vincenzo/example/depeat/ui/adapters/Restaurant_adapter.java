@@ -47,6 +47,7 @@ public class Restaurant_adapter extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {      //quando sta per essere visualizzata una lista
         RestaurantViewHolder vh = (RestaurantViewHolder) viewHolder; //cast a restaurantviewholder
+
         vh.restaurantName.setText(data.get(i).getNome());
         vh.indirizzo_restaurant.setText(data.get(i).getIndirizzo());
         vh.prezzoMin.setText("Prezzo Minimo: " + data.get(i).getPrezzo() + " €");
@@ -73,7 +74,7 @@ public class Restaurant_adapter extends RecyclerView.Adapter{
         public ImageView immagine;
 
 
-       public Button button;
+        public Button button;
 
         public RestaurantViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -89,15 +90,11 @@ public class Restaurant_adapter extends RecyclerView.Adapter{
 
         @Override
         public void onClick(View v) {
-            Restaurant rest = data.get(getAdapterPosition());
-            if (v.getId() == R.id.button1) {
-                Intent intent = new Intent(context, ShopActivity.class);
-                intent.putExtra("price", rest.getPrezzo());
-                intent.putExtra("name", rest.getNome());
-                intent.putExtra("id", rest.getId());
-                intent.putExtra("address", rest.getIndirizzo());
-                context.startActivity(intent);
+
+            if (v.getId() == R.id.login_menu) {
+
             }
+
         }
 
     }

@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     SharedPreferences.Editor editor;
     SharedPreferences share;
 
+    private static final String SharedPrefs = "org.elis.depeat.general_prefs";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +97,8 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         inflater.inflate(R.menu.menu_main, menu);
 
         setMode();
-        return  true;
+
+       return true;
     }
 
     @Override

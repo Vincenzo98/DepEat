@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">DepEat</string>
-    <string name="email_hint">insert email</string>
-    <string name="password_hint">insert your password</string>
-    <string name="password_hint2">confirm password</string>
+    <string name="email_hint">Insert email</string>
+    <string name="password_hint">Insert your password</string>
+    <string name="password_hint2">Confirm password</string>
     <string name="login">login</string>
     <string name="register">register</string>
     <string name="credential_ok">credenziali ok</string>
@@ -16,4 +16,7 @@
     <string name="remove_title">Sei sicuro?</string>
     <string name="confirm">Conferma</string>
     <string name="cancel">Cancella</string>
+    <string name="username">Insert Username</string>
+    <string name="eseguito">Eseguito</string>
+    <string name="profile">Profile</string>
 </resources>

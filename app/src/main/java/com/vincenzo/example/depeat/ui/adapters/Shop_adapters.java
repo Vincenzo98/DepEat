@@ -24,8 +24,13 @@ public class Shop_adapters extends RecyclerView.Adapter {
 
     private LayoutInflater inflater;
     private ArrayList<Shop> data;
+    private OnQuantityChangedListener onQuantityChangedListener;
 
-    //public final Context context;
+
+
+    public interface OnQuantityChangedListener{
+        void onChange(float prezzo);
+    }
 
 
     public Shop_adapters(Context context, ArrayList<Shop> data){
@@ -35,9 +40,6 @@ public class Shop_adapters extends RecyclerView.Adapter {
 
 
 
-    public interface OnQuantityChangedListener{
-        void onChange(float prezzo);
-    }
 
     public OnQuantityChangedListener getOnQuantityChangedListener() {
         return onQuantityChangedListener;
@@ -47,9 +49,11 @@ public class Shop_adapters extends RecyclerView.Adapter {
         this.onQuantityChangedListener = onQuantityChangedListener;
     }
 
-    private OnQuantityChangedListener onQuantityChangedListener;
 
-
+    public void setData(ArrayList<Shop> data){
+        this.data = data;
+        notifyDataSetChanged();
+    }
 
 
     @NonNull
@@ -76,10 +80,6 @@ public class Shop_adapters extends RecyclerView.Adapter {
     }
 
 
-    public void setData(ArrayList<Shop> data){
-        this.data = data;
-        notifyDataSetChanged();
-    }
 
     public class ShopViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -118,7 +118,6 @@ public class Shop_adapters extends RecyclerView.Adapter {
             if(v.getId() == R.id.addBtn){
 
                 shop.increaseQuantity();
-                notifyItemChanged(getAdapterPosition());
                 onQuantityChangedListener.onChange(shop.getPrezzo());
 
 
@@ -126,11 +125,11 @@ public class Shop_adapters extends RecyclerView.Adapter {
                 if(shop.getQuantity() == 0 )return;
 
                 shop.decreaseQuantity();
-                notifyItemChanged(getAdapterPosition());
                 onQuantityChangedListener.onChange(shop.getPrezzo()*-1);
 
             }
 
+            notifyItemChanged(getAdapterPosition());
 
         }
     }

@@ -15,6 +15,7 @@ package com.vincenzo.example.depeat.ui.adapters;
         import com.bumptech.glide.Glide;
         import com.vincenzo.example.depeat.R;
         import com.vincenzo.example.depeat.datamodels.Restaurant;
+        import com.vincenzo.example.depeat.services.RestController;
         import com.vincenzo.example.depeat.ui.activities.ShopActivity;
 
         import java.util.ArrayList;
@@ -89,8 +90,22 @@ public class Restaurant_adapter2 extends RecyclerView.Adapter{
 
         @Override
         public void onClick(View v) {
-            if(v.getId() == R.id.button1)
-                context.startActivity(new Intent(context, ShopActivity.class));
+            if(v.getId() == R.id.button1){
+
+                Restaurant rest = data.get(getAdapterPosition());
+
+                Intent intent = new Intent(context, ShopActivity.class);
+                intent.putExtra("name", rest.getNome());
+                intent.putExtra("address", rest.getIndirizzo());
+                intent.putExtra("minprice", rest.getPrezzo());
+                intent.putExtra("id", rest.getId());
+                intent.putExtra("urlimm", rest.getUrlImm());
+
+                context.startActivity(intent);
+
+
+            }
+
         }
 
     }
